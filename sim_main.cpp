@@ -24,10 +24,14 @@ int main(int argc, char **argv) {
   top->b = 0;
 
   while (!Verilated::gotFinish() && Verilated::time() < 1000) {
+    Verilated::timeInc(1);
+
     top->a = rand() % 2;
     top->b = rand() % 2;
-    
-    Verilated::timeInc(1);
+
+    top->eval();
+
+    tfp->dump(Verilated::time());
 
     if (top->ref_c != top->dut_c) {
       printf("ERROR: a = %d, b = %d\n", top->a, top->b);
@@ -35,8 +39,6 @@ int main(int argc, char **argv) {
       break;
     }
 
-    top->eval();
-    tfp->dump(Verilated::time());
   }
 
   top->final();
