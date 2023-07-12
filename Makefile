@@ -34,7 +34,12 @@ VERILATOR_FLAGS += --coverage
 VERILATOR_FLAGS += --top-module top
 
 # Input files for Verilator
-VERILATOR_INPUT = -f input.vc top.v dut/*.v ref/*.v sim_main.cpp
+VSRCS = $(shell find . -name "*.v")
+
+VERILATOR_INPUT = -f input.vc $(VSRCS) sim_main.cpp
+
+# Custom CPP flags
+CPPFLAGS += -r
 
 ######################################################################
 default: run
@@ -54,7 +59,7 @@ run:
 	@echo
 	@echo "-- RUN ---------------------"
 	@rm -rf logs
-	obj_dir/Vtop +trace
+	obj_dir/Vtop +trace $(CPPFLAGS)
 
 	@echo
 	@echo "-- DONE --------------------"
